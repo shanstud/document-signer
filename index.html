@@ -1,6 +1,7 @@
 <!doctype html>
 <!--
-  Document Signer — a free, open, single-file web app for signing documents.
+  Document Signer — a free, open, single-file web app for signing documents
+  and working with PDFs (merge, split, organize, convert, compress).
   ─────────────────────────────────────────────────────────────
   • The app itself is this one file (index.html): a single-file web app with no build step,
     no server and no database of its own.
@@ -23,9 +24,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="description" content="Free document signer that works entirely on your device. Drop in a PDF or photo, sign it, and download the signed PDF. No account — your document is never uploaded." />
+    <meta name="description" content="Free document signer and PDF tools that work entirely on your device. Sign a PDF, or merge, split, organize, convert and compress PDFs. No account — your files are never uploaded." />
     <link rel="icon" href="data:," />
-    <title>Document Signer — Sign a PDF in your browser, free</title>
+    <title>Document Signer — Sign &amp; work with PDFs in your browser, free</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Homemade+Apple&display=swap" rel="stylesheet" />
@@ -250,6 +251,71 @@
       }
       .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
       .hidden-file { display: none; }
+
+      /* ---------- Home: PDF tools ---------- */
+      .tools-home { margin-top: 40px; }
+      .tools-home h2 { font-size: 27px; margin: 0 0 6px; font-weight: 600; letter-spacing: -.01em; }
+      .tools-home .tools-sub { color: var(--ink-soft); font-size: 15px; line-height: 1.55; margin: 0 0 18px; max-width: 640px; }
+      .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      @media (max-width: 640px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 430px) { .tools-grid { grid-template-columns: 1fr; } }
+      button.tool-card {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 18px; display: flex; flex-direction: column; gap: 6px; text-align: left;
+        width: 100%; font: inherit; color: inherit; cursor: pointer;
+      }
+      button.tool-card:hover { border-color: var(--pen); }
+      .tool-card .t-ico { width: 30px; height: 30px; color: var(--pen); }
+      .tool-card h3 { margin: 4px 0 0; font-size: 16px; }
+      .tool-card p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); flex: 1; }
+      .tool-card .t-open { font-size: 13.5px; font-weight: 700; color: var(--pen); }
+
+      /* ---------- Tools view ---------- */
+      .tools-wrap { max-width: 880px; margin: 0 auto; padding: 22px 18px 60px; display: none; }
+      .tools-wrap.on { display: block; }
+      .tools-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .tools-head h2 { font-size: 25px; margin: 0; font-weight: 600; letter-spacing: -.01em; }
+      .tool-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+      .tool-chips button {
+        min-height: 38px; padding: 7px 13px; border-radius: 20px; border: 1px solid var(--line);
+        background: var(--surface); font-weight: 600; font-size: 13.5px;
+      }
+      .tool-chips button.on { background: var(--pen); border-color: var(--pen); color: #fff; }
+      @media (prefers-color-scheme: dark) { .tool-chips button.on { color: #10182e; } }
+      .tool-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-top: 16px; }
+      .tool-panel h3 { margin: 0 0 6px; font-size: 19px; }
+      .tool-panel p.desc { color: var(--ink-soft); font-size: 14.5px; line-height: 1.55; margin: 0 0 14px; }
+      .file-list { list-style: none; margin: 14px 0 0; padding: 0; }
+      .file-list li { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; margin-bottom: 7px; font-size: 14px; background: var(--surface); }
+      .file-list .fname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .file-list .fmeta { font-size: 12.5px; color: var(--ink-soft); flex: none; }
+      .icon-btn { min-width: 36px; min-height: 36px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; font-size: 14px; }
+      .icon-btn:hover { border-color: var(--pen); color: var(--pen); }
+      .tool-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
+      .tool-result { margin-top: 16px; display: grid; gap: 8px; }
+      .tool-result:empty { display: none; }
+      .result-link { display: flex; align-items: center; gap: 10px; border: 1px solid var(--good); background: var(--surface); border-radius: 10px; padding: 11px 14px; text-decoration: none; color: var(--ink); font-weight: 600; font-size: 14.5px; min-height: 44px; }
+      .result-link:hover { border-color: var(--pen); }
+      .result-link .rmeta { margin-left: auto; font-size: 12.5px; color: var(--ink-soft); font-weight: 400; flex: none; }
+      .field-row { margin: 12px 0 0; }
+      .field-row label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+      .field-row input[type="text"], .field-row select {
+        width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 9px;
+        padding: 9px 12px; background: var(--surface); font-size: 16px; color: var(--ink);
+      }
+      .radio-row { display: flex; gap: 18px; flex-wrap: wrap; margin: 12px 0 0; }
+      .radio-row label { display: flex; align-items: center; gap: 8px; font-size: 14.5px; min-height: 40px; cursor: pointer; }
+      .radio-row input { width: 19px; height: 19px; accent-color: var(--pen); }
+      .note-box { border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); margin-top: 14px; }
+      .status-line { font-size: 14px; color: var(--ink-soft); min-height: 20px; margin-top: 12px; line-height: 1.5; }
+      .thumb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 14px; }
+      .thumb-card { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 8px; }
+      .thumb-card canvas, .thumb-card img { width: 100%; height: auto; display: block; border-radius: 4px; }
+      .thumb-card .tbar { display: flex; align-items: center; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+      .thumb-card .tbar .icon-btn { min-width: 32px; min-height: 32px; font-size: 13px; padding: 2px 6px; background: #fff; color: #1c2430; }
+      .thumb-card .pnum { font-size: 12.5px; color: #4c5563; font-weight: 700; margin-right: auto; }
+      .thumb-card[draggable="true"] { cursor: grab; }
+      .thumb-card.drag-over { outline: 2px solid var(--pen); outline-offset: 2px; }
     </style>
   </head>
   <body>
@@ -259,7 +325,7 @@
       <div class="intro">
         <div class="kicker">Free &amp; open — no account · your document stays on your device</div>
         <h1 class="serif">Drop in a document.<br />Sign it. Download it.</h1>
-        <p class="lede">An open document signer anyone can use. Your file is never uploaded — the signing happens right here on your device, and you download the finished PDF.</p>
+        <p class="lede">An open document signer anyone can use — plus a full set of PDF tools. Your files are never uploaded: everything happens right here on your device, and you download the finished result.</p>
       </div>
 
       <div class="dropzone" id="dropzone">
@@ -278,7 +344,50 @@
       </div>
 
       <div class="sample-row">No document handy? <button type="button" id="sampleBtn">Open a sample agreement</button> to try it out.</div>
-      <p class="fineprint">Signatures are drawn or typed images placed on the document — the same way most everyday agreements get signed on paper. For high-value or regulated documents, check whether your counterparty needs a certified e-signature service.<br />Privacy: your document is processed entirely on your device and is never uploaded, and this app collects nothing. The PDF engine that processes your document runs entirely from this file. The open-source code libraries and handwriting fonts it uses load from public CDNs, with integrity checks on the library scripts.</p>
+
+      <div class="tools-home">
+        <h2 class="serif">PDF Tools</h2>
+        <p class="tools-sub">Six everyday PDF jobs, free and open — the same on-device promise as the signer. Nothing is uploaded, nothing is collected.</p>
+        <div class="tools-grid">
+          <button class="tool-card" type="button" data-open-tool="merge">
+            <svg class="t-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"/><path d="M12 8v8M9 13l3 3 3-3"/></svg>
+            <h3>Merge PDF</h3>
+            <p>Combine several PDFs into one, in the order you choose.</p>
+            <span class="t-open">Open tool →</span>
+          </button>
+          <button class="tool-card" type="button" data-open-tool="split">
+            <svg class="t-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8 7.5L20 19M8 16.5L20 5"/></svg>
+            <h3>Split PDF</h3>
+            <p>Pull out a page range, or save every page as its own PDF.</p>
+            <span class="t-open">Open tool →</span>
+          </button>
+          <button class="tool-card" type="button" data-open-tool="organize">
+            <svg class="t-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+            <h3>Organize PDF</h3>
+            <p>See every page, reorder them, rotate pages, delete pages.</p>
+            <span class="t-open">Open tool →</span>
+          </button>
+          <button class="tool-card" type="button" data-open-tool="img2pdf">
+            <svg class="t-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 3 3 4-4 4 4"/></svg>
+            <h3>Images to PDF</h3>
+            <p>Turn PNG and JPG photos into a single PDF, one page each.</p>
+            <span class="t-open">Open tool →</span>
+          </button>
+          <button class="tool-card" type="button" data-open-tool="pdf2img">
+            <svg class="t-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 17l2.5-2.5L14 17l3.5-3.5"/></svg>
+            <h3>PDF to Images</h3>
+            <p>Save each page of a PDF as a PNG or JPG picture.</p>
+            <span class="t-open">Open tool →</span>
+          </button>
+          <button class="tool-card" type="button" data-open-tool="compress">
+            <svg class="t-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l5 5M4 9V4h5M20 20l-5-5M20 15v5h-5"/></svg>
+            <h3>Compress PDF</h3>
+            <p>Rebuild a PDF at a smaller image quality to shrink its size.</p>
+            <span class="t-open">Open tool →</span>
+          </button>
+        </div>
+      </div>
+      <p class="fineprint">Signatures are drawn or typed images placed on the document — the same way most everyday agreements get signed on paper. For high-value or regulated documents, check whether your counterparty needs a certified e-signature service.<br />Privacy: your documents and files — for signing and for every PDF tool — are processed entirely on your device and are never uploaded, and this app collects nothing. The PDF engine that processes your files runs entirely from this file. The open-source code libraries and handwriting fonts it uses load from public CDNs, with integrity checks on the library scripts.</p>
     </div>
 
     <!-- ================= WORKSPACE ================= -->
@@ -334,6 +443,149 @@
           <button class="btn small danger" id="clearFieldsBtn" type="button">Remove all fields</button>
         </aside>
       </div>
+    </div>
+
+    <!-- ================= TOOLS VIEW ================= -->
+    <div class="tools-wrap" id="toolsView">
+      <div class="tools-head">
+        <button class="btn small" id="toolsBack" type="button">← Home</button>
+        <h2 class="serif" id="toolTitle">PDF Tools</h2>
+      </div>
+      <div class="tool-chips" id="toolChips">
+        <button type="button" data-open-tool="merge">Merge</button>
+        <button type="button" data-open-tool="split">Split</button>
+        <button type="button" data-open-tool="organize">Organize</button>
+        <button type="button" data-open-tool="img2pdf">Images → PDF</button>
+        <button type="button" data-open-tool="pdf2img">PDF → Images</button>
+        <button type="button" data-open-tool="compress">Compress</button>
+      </div>
+
+      <!-- Merge -->
+      <section class="tool-panel" id="panel-merge" hidden>
+        <h3>Merge PDF</h3>
+        <p class="desc">Pick two or more PDFs, put them in the order you want, and combine them into a single PDF.</p>
+        <button class="btn" id="mergePick" type="button">Choose PDF files</button>
+        <input class="hidden-file" type="file" id="mergeInput" accept="application/pdf" multiple />
+        <ul class="file-list" id="mergeList"></ul>
+        <div class="tool-actions">
+          <button class="btn primary" id="mergeGo" type="button">Merge PDFs</button>
+        </div>
+        <div class="status-line" id="mergeStatus"></div>
+        <div class="tool-result" id="mergeResult"></div>
+      </section>
+
+      <!-- Split -->
+      <section class="tool-panel" id="panel-split" hidden>
+        <h3>Split PDF</h3>
+        <p class="desc">Pick one PDF, then either extract a set of pages into a new PDF, or save every page as its own separate PDF.</p>
+        <button class="btn" id="splitPick" type="button">Choose a PDF</button>
+        <input class="hidden-file" type="file" id="splitInput" accept="application/pdf" />
+        <div class="status-line" id="splitInfo"></div>
+        <div class="radio-row" role="radiogroup" aria-label="Split mode">
+          <label><input type="radio" name="splitMode" value="ranges" checked /> Extract page ranges</label>
+          <label><input type="radio" name="splitMode" value="each" /> Every page as its own PDF</label>
+        </div>
+        <div class="field-row" id="splitRangesRow">
+          <label for="splitRanges">Pages to extract</label>
+          <input type="text" id="splitRanges" placeholder="e.g. 1-3, 5, 8-10" inputmode="text" autocomplete="off" />
+        </div>
+        <div class="tool-actions">
+          <button class="btn primary" id="splitGo" type="button">Split PDF</button>
+        </div>
+        <div class="status-line" id="splitStatus"></div>
+        <div class="tool-result" id="splitResult"></div>
+      </section>
+
+      <!-- Organize -->
+      <section class="tool-panel" id="panel-organize" hidden>
+        <h3>Organize PDF</h3>
+        <p class="desc">Pick one PDF to see all its pages. Drag pages (or use the arrow buttons) to reorder them, rotate a page, or delete a page — then save the new arrangement as a PDF.</p>
+        <button class="btn" id="orgPick" type="button">Choose a PDF</button>
+        <input class="hidden-file" type="file" id="orgInput" accept="application/pdf" />
+        <div class="status-line" id="orgInfo"></div>
+        <div class="thumb-grid" id="orgGrid"></div>
+        <div class="tool-actions">
+          <button class="btn primary" id="orgSave" type="button">Save organized PDF</button>
+        </div>
+        <div class="status-line" id="orgStatus"></div>
+        <div class="tool-result" id="orgResult"></div>
+      </section>
+
+      <!-- Images to PDF -->
+      <section class="tool-panel" id="panel-img2pdf" hidden>
+        <h3>Images to PDF</h3>
+        <p class="desc">Pick PNG or JPG images and build a PDF with one image per page, in the order you set.</p>
+        <button class="btn" id="i2pPick" type="button">Choose images</button>
+        <input class="hidden-file" type="file" id="i2pInput" accept="image/png,image/jpeg" multiple />
+        <ul class="file-list" id="i2pList"></ul>
+        <div class="field-row">
+          <label for="i2pSize">Page size</label>
+          <select id="i2pSize">
+            <option value="fit" selected>Fit each page to its image</option>
+            <option value="a4">A4 — image fitted inside the page</option>
+            <option value="letter">US Letter — image fitted inside the page</option>
+          </select>
+        </div>
+        <div class="tool-actions">
+          <button class="btn primary" id="i2pGo" type="button">Make PDF</button>
+        </div>
+        <div class="status-line" id="i2pStatus"></div>
+        <div class="tool-result" id="i2pResult"></div>
+      </section>
+
+      <!-- PDF to Images -->
+      <section class="tool-panel" id="panel-pdf2img" hidden>
+        <h3>PDF to Images</h3>
+        <p class="desc">Pick a PDF and save every page as a picture. Each page gets its own download below.</p>
+        <button class="btn" id="p2iPick" type="button">Choose a PDF</button>
+        <input class="hidden-file" type="file" id="p2iInput" accept="application/pdf" />
+        <div class="status-line" id="p2iInfo"></div>
+        <div class="field-row">
+          <label for="p2iFormat">Image format</label>
+          <select id="p2iFormat">
+            <option value="png" selected>PNG — sharpest, larger files</option>
+            <option value="jpg">JPG — smaller files</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label for="p2iScale">Image size</label>
+          <select id="p2iScale">
+            <option value="1.5">Standard — good for screens and sharing</option>
+            <option value="2.5" selected>Large — better for printing</option>
+          </select>
+        </div>
+        <div class="tool-actions">
+          <button class="btn primary" id="p2iGo" type="button">Convert pages</button>
+        </div>
+        <div class="status-line" id="p2iStatus"></div>
+        <div class="thumb-grid" id="p2iGrid"></div>
+        <div class="tool-result" id="p2iResult"></div>
+      </section>
+
+      <!-- Compress -->
+      <section class="tool-panel" id="panel-compress" hidden>
+        <h3>Compress PDF</h3>
+        <p class="desc">This rebuilds your PDF by re-encoding each page as an image at the quality you pick — the same honest approach a browser-only tool can offer.</p>
+        <button class="btn" id="cmpPick" type="button">Choose a PDF</button>
+        <input class="hidden-file" type="file" id="cmpInput" accept="application/pdf" />
+        <div class="status-line" id="cmpInfo"></div>
+        <div class="field-row">
+          <label for="cmpQuality">Quality</label>
+          <select id="cmpQuality">
+            <option value="high">High quality — mild size reduction</option>
+            <option value="med" selected>Balanced — good quality, smaller file</option>
+            <option value="low">Smallest file — visibly softer pages</option>
+          </select>
+        </div>
+        <div class="note-box">Honest note: results vary a lot. PDFs that are mostly scans or photos usually shrink well; text-heavy PDFs may barely shrink — or even grow — because every page becomes a picture and the text is no longer selectable or searchable. The finished size is shown next to the original before you download, so you can judge for yourself.</div>
+        <div class="tool-actions">
+          <button class="btn primary" id="cmpGo" type="button">Compress PDF</button>
+        </div>
+        <div class="status-line" id="cmpStatus"></div>
+        <div class="tool-result" id="cmpResult"></div>
+      </section>
+
+      <p class="fineprint">Every tool on this page runs entirely on your device, exactly like the signer — your files are never uploaded and nothing is collected.</p>
     </div>
 
     <!-- ================= SIGNATURE SHEET ================= -->
@@ -1372,6 +1624,554 @@
           return Promise.all(jobs).then(function () { return doc.save(); });
         });
       }
+
+      /* ================= PDF TOOLS =================
+         Six browser-only tools built on the same two libraries the signer
+         already loads (pdf-lib to build PDFs, PDF.js to render them).
+         Files are read, processed and downloaded entirely on the device —
+         nothing is uploaded and nothing is collected, same as signing. */
+      function fmtBytes(n) {
+        if (n < 1024) return n + " B";
+        if (n < 1048576) return (Math.round(n / 102.4) / 10) + " KB";
+        return (Math.round(n / 104857.6) / 10) + " MB";
+      }
+      function baseName(name) { return (name || "document").replace(/\.[^.]+$/, ""); }
+      function setBusy(btn, on, busyLabel) {
+        if (on) { btn.dataset.label = btn.textContent; btn.disabled = true; btn.textContent = busyLabel; }
+        else { btn.disabled = false; if (btn.dataset.label) btn.textContent = btn.dataset.label; }
+      }
+      function renderResults(host, items) {
+        host.innerHTML = "";
+        items.forEach(function (it) {
+          var url = URL.createObjectURL(it.blob);
+          var a = document.createElement("a");
+          a.className = "result-link"; a.href = url; a.download = it.name; a.rel = "noopener";
+          var s = document.createElement("span"); s.textContent = "Download — " + it.label;
+          var m = document.createElement("span"); m.className = "rmeta"; m.textContent = fmtBytes(it.blob.size);
+          a.appendChild(s); a.appendChild(m);
+          host.appendChild(a);
+        });
+      }
+      function pdfBlob(bytes) { return new Blob([bytes], { type: "application/pdf" }); }
+      function loadPdfLibDoc(file) {
+        return file.arrayBuffer().then(function (buf) {
+          return PDFLib.PDFDocument.load(new Uint8Array(buf), { ignoreEncryption: false });
+        });
+      }
+      function openJsPdf(bytes) {
+        if (!window.pdfjsLib) return Promise.reject(new Error("PDF viewer failed to load — check your connection and try again."));
+        return pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+      }
+      function canvasToBytes(canvas, type, quality) {
+        return new Promise(function (resolve, reject) {
+          canvas.toBlob(function (b) {
+            if (!b) { reject(new Error("encode failed")); return; }
+            b.arrayBuffer().then(function (buf) { resolve(new Uint8Array(buf)); }, reject);
+          }, type, quality);
+        });
+      }
+      /* Decode an image file to a canvas with phone-photo orientation
+         applied — the same normalization the signer uses for documents. */
+      function imageFileToCanvas(file) {
+        var decoded;
+        if (window.createImageBitmap) {
+          decoded = createImageBitmap(file, { imageOrientation: "from-image" })
+            .catch(function () { return createImageBitmap(file); });
+        } else {
+          decoded = Promise.reject(new Error("no createImageBitmap"));
+        }
+        return decoded.catch(function () {
+          return new Promise(function (resolve, reject) {
+            var url = URL.createObjectURL(file);
+            var img = new Image();
+            img.onload = function () { URL.revokeObjectURL(url); resolve(img); };
+            img.onerror = function () { URL.revokeObjectURL(url); reject(new Error("decode failed")); };
+            img.src = url;
+          });
+        }).then(function (src) {
+          var sw = src.naturalWidth || src.width, sh = src.naturalHeight || src.height;
+          if (!sw || !sh) throw new Error("empty image");
+          var maxDim = 2480;
+          var scale = Math.min(1, maxDim / Math.max(sw, sh));
+          var canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(sw * scale));
+          canvas.height = Math.max(1, Math.round(sh * scale));
+          var ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
+          if (src.close) src.close();
+          return canvas;
+        });
+      }
+      function buildFileRow(file, idx, total, onMove, onRemove) {
+        var li = document.createElement("li");
+        var nm = document.createElement("span"); nm.className = "fname"; nm.textContent = file.name;
+        var mt = document.createElement("span"); mt.className = "fmeta"; mt.textContent = fmtBytes(file.size);
+        li.appendChild(nm); li.appendChild(mt);
+        var up = document.createElement("button"); up.className = "icon-btn"; up.type = "button"; up.textContent = "↑";
+        up.setAttribute("aria-label", "Move up"); up.disabled = idx === 0;
+        up.addEventListener("click", function () { onMove(idx, -1); });
+        var dn = document.createElement("button"); dn.className = "icon-btn"; dn.type = "button"; dn.textContent = "↓";
+        dn.setAttribute("aria-label", "Move down"); dn.disabled = idx === total - 1;
+        dn.addEventListener("click", function () { onMove(idx, 1); });
+        var rm = document.createElement("button"); rm.className = "icon-btn"; rm.type = "button"; rm.textContent = "×";
+        rm.setAttribute("aria-label", "Remove file");
+        rm.addEventListener("click", function () { onRemove(idx); });
+        li.appendChild(up); li.appendChild(dn); li.appendChild(rm);
+        return li;
+      }
+      function moveIn(arr, idx, dir) {
+        var j = idx + dir;
+        if (j < 0 || j >= arr.length) return;
+        var t = arr[idx]; arr[idx] = arr[j]; arr[j] = t;
+      }
+
+      /* ---------- Tools navigation ---------- */
+      var TOOL_TITLES = { merge: "Merge PDF", split: "Split PDF", organize: "Organize PDF", img2pdf: "Images to PDF", pdf2img: "PDF to Images", compress: "Compress PDF" };
+      function openTool(tool) {
+        $("dropView").style.display = "none";
+        $("toolsView").classList.add("on");
+        Object.keys(TOOL_TITLES).forEach(function (k) { $("panel-" + k).hidden = k !== tool; });
+        document.querySelectorAll("#toolChips button").forEach(function (b) {
+          b.classList.toggle("on", b.getAttribute("data-open-tool") === tool);
+        });
+        $("toolTitle").textContent = TOOL_TITLES[tool];
+        window.scrollTo(0, 0);
+      }
+      function goHome() {
+        $("toolsView").classList.remove("on");
+        if (!$("workView").classList.contains("on")) $("dropView").style.display = "";
+        window.scrollTo(0, 0);
+      }
+      document.querySelectorAll("[data-open-tool]").forEach(function (b) {
+        b.addEventListener("click", function () { openTool(b.getAttribute("data-open-tool")); });
+      });
+      $("toolsBack").addEventListener("click", goHome);
+
+      /* ---------- 1. Merge PDF ---------- */
+      var mergeFiles = [];
+      function renderMergeList() {
+        var ul = $("mergeList"); ul.innerHTML = "";
+        mergeFiles.forEach(function (f, i) {
+          ul.appendChild(buildFileRow(f, i, mergeFiles.length,
+            function (idx, dir) { moveIn(mergeFiles, idx, dir); renderMergeList(); },
+            function (idx) { mergeFiles.splice(idx, 1); renderMergeList(); }));
+        });
+        $("mergeStatus").textContent = mergeFiles.length
+          ? mergeFiles.length + (mergeFiles.length === 1 ? " PDF ready — add at least one more to merge." : " PDFs ready to merge, in the order listed.")
+          : "";
+      }
+      $("mergePick").addEventListener("click", function () { $("mergeInput").click(); });
+      $("mergeInput").addEventListener("change", function () {
+        var added = 0;
+        Array.prototype.forEach.call(this.files || [], function (f) {
+          if (f.type === "application/pdf" || /\.pdf$/i.test(f.name)) { mergeFiles.push(f); added++; }
+        });
+        this.value = "";
+        if (!added) toast("Please choose PDF files.");
+        renderMergeList();
+      });
+      $("mergeGo").addEventListener("click", function () {
+        if (!window.PDFLib) { toast("PDF maker failed to load — check your connection and try again."); return; }
+        if (mergeFiles.length < 2) { toast("Add at least two PDFs to merge."); return; }
+        var btn = this; setBusy(btn, true, "Merging…");
+        $("mergeResult").innerHTML = "";
+        var out = PDFLib.PDFDocument.create();
+        var chain = Promise.resolve();
+        mergeFiles.forEach(function (f) {
+          chain = chain.then(function () {
+            return loadPdfLibDoc(f).then(function (src) {
+              return out.copyPages(src, src.getPageIndices()).then(function (pages) {
+                pages.forEach(function (p) { out.addPage(p); });
+              });
+            });
+          });
+        });
+        chain.then(function () { return out.save(); }).then(function (bytes) {
+          renderResults($("mergeResult"), [{ blob: pdfBlob(bytes), name: "merged.pdf", label: "merged.pdf" }]);
+          $("mergeStatus").textContent = "Done — your merged PDF is ready below.";
+        }).catch(function () {
+          toast("Those PDFs could not be merged — one may be password-protected or damaged.");
+        }).then(function () { setBusy(btn, false); });
+      });
+
+      /* ---------- 2. Split PDF ---------- */
+      var splitFile = null, splitCount = 0;
+      function splitMode() {
+        var r = document.querySelector('input[name="splitMode"]:checked');
+        return r ? r.value : "ranges";
+      }
+      document.querySelectorAll('input[name="splitMode"]').forEach(function (r) {
+        r.addEventListener("change", function () { $("splitRangesRow").style.display = splitMode() === "ranges" ? "" : "none"; });
+      });
+      $("splitPick").addEventListener("click", function () { $("splitInput").click(); });
+      $("splitInput").addEventListener("change", function () {
+        var f = this.files && this.files[0]; this.value = "";
+        if (!f) return;
+        if (!window.PDFLib) { toast("PDF maker failed to load — check your connection and try again."); return; }
+        splitFile = f; splitCount = 0;
+        $("splitResult").innerHTML = ""; $("splitStatus").textContent = "";
+        loadPdfLibDoc(f).then(function (doc) {
+          splitCount = doc.getPageCount();
+          $("splitInfo").textContent = f.name + " · " + splitCount + (splitCount === 1 ? " page" : " pages") + " · " + fmtBytes(f.size);
+        }).catch(function () {
+          splitFile = null;
+          $("splitInfo").textContent = "";
+          toast("That PDF could not be opened — it may be password-protected or damaged.");
+        });
+      });
+      function parseRanges(str, max) {
+        var pages = [], seen = {};
+        var parts = str.split(",");
+        for (var i = 0; i < parts.length; i++) {
+          var part = parts[i].trim();
+          if (!part) continue;
+          var m = part.match(/^(\d+)\s*(?:-\s*(\d+))?$/);
+          if (!m) return null;
+          var a = parseInt(m[1], 10), b = m[2] ? parseInt(m[2], 10) : a;
+          if (a < 1 || b > max || a > b) return null;
+          for (var p = a; p <= b; p++) { if (!seen[p]) { seen[p] = true; pages.push(p - 1); } }
+        }
+        return pages.length ? pages : null;
+      }
+      $("splitGo").addEventListener("click", function () {
+        if (!window.PDFLib) { toast("PDF maker failed to load — check your connection and try again."); return; }
+        if (!splitFile || !splitCount) { toast("Choose a PDF first."); return; }
+        var btn = this, base = baseName(splitFile.name);
+        $("splitResult").innerHTML = "";
+        if (splitMode() === "each") {
+          setBusy(btn, true, "Splitting…");
+          loadPdfLibDoc(splitFile).then(function (src) {
+            var items = [], chain = Promise.resolve();
+            src.getPageIndices().forEach(function (idx) {
+              chain = chain.then(function () {
+                var one = PDFLib.PDFDocument.create();
+                return one.copyPages(src, [idx]).then(function (pages) {
+                  one.addPage(pages[0]);
+                  return one.save();
+                }).then(function (bytes) {
+                  var nm = base + "-page-" + (idx + 1) + ".pdf";
+                  items.push({ blob: pdfBlob(bytes), name: nm, label: nm });
+                });
+              });
+            });
+            return chain.then(function () { return items; });
+          }).then(function (items) {
+            renderResults($("splitResult"), items);
+            $("splitStatus").textContent = "Done — " + items.length + (items.length === 1 ? " PDF" : " PDFs") + " ready below, one per page.";
+          }).catch(function () { toast("That PDF could not be split."); })
+            .then(function () { setBusy(btn, false); });
+        } else {
+          var indices = parseRanges($("splitRanges").value, splitCount);
+          if (!indices) { toast("Enter pages like 1-3, 5 — within 1 to " + splitCount + "."); return; }
+          setBusy(btn, true, "Splitting…");
+          loadPdfLibDoc(splitFile).then(function (src) {
+            var out = PDFLib.PDFDocument.create();
+            return out.copyPages(src, indices).then(function (pages) {
+              pages.forEach(function (p) { out.addPage(p); });
+              return out.save();
+            });
+          }).then(function (bytes) {
+            var nm = base + "-pages.pdf";
+            renderResults($("splitResult"), [{ blob: pdfBlob(bytes), name: nm, label: nm }]);
+            $("splitStatus").textContent = "Done — " + indices.length + (indices.length === 1 ? " page" : " pages") + " extracted into one PDF, ready below.";
+          }).catch(function () { toast("That PDF could not be split."); })
+            .then(function () { setBusy(btn, false); });
+        }
+      });
+
+      /* ---------- 3. Organize PDF ---------- */
+      var org = { bytes: null, jsDoc: null, items: [], name: "document" };
+      $("orgPick").addEventListener("click", function () { $("orgInput").click(); });
+      $("orgInput").addEventListener("change", function () {
+        var f = this.files && this.files[0]; this.value = "";
+        if (!f) return;
+        org.name = baseName(f.name);
+        $("orgResult").innerHTML = ""; $("orgStatus").textContent = ""; $("orgGrid").innerHTML = "";
+        $("orgInfo").textContent = "Loading " + f.name + "…";
+        f.arrayBuffer().then(function (buf) {
+          org.bytes = new Uint8Array(buf);
+          return openJsPdf(org.bytes);
+        }).then(function (doc) {
+          org.jsDoc = doc;
+          org.items = [];
+          for (var i = 0; i < doc.numPages; i++) org.items.push({ src: i, rot: 0 });
+          $("orgInfo").textContent = f.name + " · " + doc.numPages + (doc.numPages === 1 ? " page" : " pages") + " — drag pages or use the buttons to arrange them.";
+          renderOrgGrid();
+        }).catch(function () {
+          org.bytes = null; org.jsDoc = null; org.items = [];
+          $("orgInfo").textContent = "";
+          toast("That PDF could not be opened — it may be password-protected or damaged.");
+        });
+      });
+      function renderOrgThumb(canvas, item) {
+        if (!org.jsDoc) return;
+        org.jsDoc.getPage(item.src + 1).then(function (page) {
+          var rotation = (((page.rotate || 0) + item.rot) % 360 + 360) % 360;
+          var vp1 = page.getViewport({ scale: 1, rotation: rotation });
+          var scale = 150 / vp1.width;
+          var vp = page.getViewport({ scale: scale, rotation: rotation });
+          canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
+          page.render({ canvasContext: canvas.getContext("2d"), viewport: vp });
+        }).catch(function () { /* a failed thumbnail leaves a blank card; saving still works */ });
+      }
+      var orgDragIdx = null;
+      function renderOrgGrid() {
+        var grid = $("orgGrid"); grid.innerHTML = "";
+        org.items.forEach(function (item, idx) {
+          var card = document.createElement("div");
+          card.className = "thumb-card"; card.draggable = true;
+          var canvas = document.createElement("canvas");
+          card.appendChild(canvas);
+          renderOrgThumb(canvas, item);
+          var bar = document.createElement("div"); bar.className = "tbar";
+          var num = document.createElement("span"); num.className = "pnum";
+          num.textContent = "Page " + (item.src + 1) + (item.rot ? " · " + item.rot + "°" : "");
+          bar.appendChild(num);
+          function orgBtn(label, aria, fn) {
+            var b = document.createElement("button"); b.className = "icon-btn"; b.type = "button";
+            b.textContent = label; b.setAttribute("aria-label", aria); b.title = aria;
+            b.addEventListener("click", fn);
+            return b;
+          }
+          bar.appendChild(orgBtn("←", "Move page earlier", function () { moveIn(org.items, idx, -1); renderOrgGrid(); }));
+          bar.appendChild(orgBtn("→", "Move page later", function () { moveIn(org.items, idx, 1); renderOrgGrid(); }));
+          bar.appendChild(orgBtn("⟲", "Rotate left", function () { item.rot = (item.rot + 270) % 360; renderOrgGrid(); }));
+          bar.appendChild(orgBtn("⟳", "Rotate right", function () { item.rot = (item.rot + 90) % 360; renderOrgGrid(); }));
+          bar.appendChild(orgBtn("×", "Delete page", function () {
+            if (org.items.length <= 1) { toast("A PDF needs at least one page."); return; }
+            org.items.splice(idx, 1); renderOrgGrid();
+          }));
+          card.appendChild(bar);
+          card.addEventListener("dragstart", function (e) {
+            orgDragIdx = idx;
+            if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
+          });
+          card.addEventListener("dragover", function (e) { e.preventDefault(); card.classList.add("drag-over"); });
+          card.addEventListener("dragleave", function () { card.classList.remove("drag-over"); });
+          card.addEventListener("drop", function (e) {
+            e.preventDefault(); card.classList.remove("drag-over");
+            if (orgDragIdx === null || orgDragIdx === idx) return;
+            var moved = org.items.splice(orgDragIdx, 1)[0];
+            org.items.splice(idx, 0, moved);
+            orgDragIdx = null;
+            renderOrgGrid();
+          });
+          grid.appendChild(card);
+        });
+      }
+      $("orgSave").addEventListener("click", function () {
+        if (!window.PDFLib) { toast("PDF maker failed to load — check your connection and try again."); return; }
+        if (!org.bytes || !org.items.length) { toast("Choose a PDF first."); return; }
+        var btn = this; setBusy(btn, true, "Saving…");
+        $("orgResult").innerHTML = "";
+        PDFLib.PDFDocument.load(org.bytes.slice()).then(function (src) {
+          var out = PDFLib.PDFDocument.create();
+          var chain = Promise.resolve();
+          org.items.forEach(function (item) {
+            chain = chain.then(function () {
+              return out.copyPages(src, [item.src]).then(function (pages) {
+                var page = pages[0];
+                if (item.rot) {
+                  var cur = 0;
+                  try { cur = page.getRotation().angle || 0; } catch (e) { cur = 0; }
+                  page.setRotation(PDFLib.degrees(((cur + item.rot) % 360 + 360) % 360));
+                }
+                out.addPage(page);
+              });
+            });
+          });
+          return chain.then(function () { return out.save(); });
+        }).then(function (bytes) {
+          var nm = org.name + "-organized.pdf";
+          renderResults($("orgResult"), [{ blob: pdfBlob(bytes), name: nm, label: nm }]);
+          $("orgStatus").textContent = "Done — " + org.items.length + (org.items.length === 1 ? " page" : " pages") + " in your new order, ready below.";
+        }).catch(function () { toast("The organized PDF could not be saved."); })
+          .then(function () { setBusy(btn, false); });
+      });
+
+      /* ---------- 4. Images to PDF ---------- */
+      var i2pFiles = [];
+      function renderI2pList() {
+        var ul = $("i2pList"); ul.innerHTML = "";
+        i2pFiles.forEach(function (f, i) {
+          ul.appendChild(buildFileRow(f, i, i2pFiles.length,
+            function (idx, dir) { moveIn(i2pFiles, idx, dir); renderI2pList(); },
+            function (idx) { i2pFiles.splice(idx, 1); renderI2pList(); }));
+        });
+        $("i2pStatus").textContent = i2pFiles.length
+          ? i2pFiles.length + (i2pFiles.length === 1 ? " image ready." : " images ready, in the order listed.")
+          : "";
+      }
+      $("i2pPick").addEventListener("click", function () { $("i2pInput").click(); });
+      $("i2pInput").addEventListener("change", function () {
+        var added = 0;
+        Array.prototype.forEach.call(this.files || [], function (f) {
+          if (f.type === "image/png" || f.type === "image/jpeg" || /\.(png|jpe?g)$/i.test(f.name)) { i2pFiles.push(f); added++; }
+        });
+        this.value = "";
+        if (!added) toast("Please choose PNG or JPG images.");
+        renderI2pList();
+      });
+      $("i2pGo").addEventListener("click", function () {
+        if (!window.PDFLib) { toast("PDF maker failed to load — check your connection and try again."); return; }
+        if (!i2pFiles.length) { toast("Choose at least one image."); return; }
+        var btn = this; setBusy(btn, true, "Building PDF…");
+        $("i2pResult").innerHTML = "";
+        var mode = $("i2pSize").value;
+        var doc = PDFLib.PDFDocument.create();
+        var chain = Promise.resolve();
+        i2pFiles.forEach(function (f) {
+          chain = chain.then(function () {
+            return imageFileToCanvas(f).then(function (canvas) {
+              return canvasToBytes(canvas, "image/png").then(function (bytes) {
+                return doc.embedPng(bytes).then(function (im) {
+                  var pageW, pageH, draw;
+                  if (mode === "a4" || mode === "letter") {
+                    pageW = mode === "a4" ? 595.28 : 612;
+                    pageH = mode === "a4" ? 841.89 : 792;
+                    var margin = 36;
+                    var s = Math.min((pageW - margin * 2) / im.width, (pageH - margin * 2) / im.height);
+                    draw = { width: im.width * s, height: im.height * s }; draw.x = (pageW - draw.width) / 2; draw.y = (pageH - draw.height) / 2;
+                  } else {
+                    var s2 = Math.min(1, 792 / Math.max(im.width, im.height));
+                    pageW = im.width * s2; pageH = im.height * s2;
+                    draw = { x: 0, y: 0, width: pageW, height: pageH };
+                  }
+                  var page = doc.addPage([pageW, pageH]);
+                  page.drawImage(im, draw);
+                });
+              });
+            });
+          });
+        });
+        chain.then(function () { return doc.save(); }).then(function (bytes) {
+          renderResults($("i2pResult"), [{ blob: pdfBlob(bytes), name: "images.pdf", label: "images.pdf" }]);
+          $("i2pStatus").textContent = "Done — your PDF is ready below.";
+        }).catch(function () { toast("Those images could not be made into a PDF."); })
+          .then(function () { setBusy(btn, false); });
+      });
+
+      /* ---------- 5. PDF to Images ---------- */
+      var p2iFile = null;
+      $("p2iPick").addEventListener("click", function () { $("p2iInput").click(); });
+      $("p2iInput").addEventListener("change", function () {
+        var f = this.files && this.files[0]; this.value = "";
+        if (!f) return;
+        p2iFile = f;
+        $("p2iGrid").innerHTML = ""; $("p2iResult").innerHTML = ""; $("p2iStatus").textContent = "";
+        $("p2iInfo").textContent = f.name + " · " + fmtBytes(f.size) + " — ready to convert.";
+      });
+      $("p2iGo").addEventListener("click", function () {
+        if (!p2iFile) { toast("Choose a PDF first."); return; }
+        var btn = this; setBusy(btn, true, "Converting…");
+        $("p2iGrid").innerHTML = ""; $("p2iResult").innerHTML = "";
+        var format = $("p2iFormat").value;
+        var scale = parseFloat($("p2iScale").value) || 2;
+        var mime = format === "jpg" ? "image/jpeg" : "image/png";
+        var base = baseName(p2iFile.name);
+        p2iFile.arrayBuffer().then(function (buf) {
+          return openJsPdf(new Uint8Array(buf));
+        }).then(function (doc) {
+          var items = [], chain = Promise.resolve();
+          for (var n = 1; n <= doc.numPages; n++) {
+            (function (pageNum) {
+              chain = chain.then(function () {
+                return doc.getPage(pageNum).then(function (page) {
+                  var vp = page.getViewport({ scale: scale });
+                  var canvas = document.createElement("canvas");
+                  canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
+                  var ctx = canvas.getContext("2d");
+                  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                  return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+                    return new Promise(function (resolve) {
+                      canvas.toBlob(function (b) { resolve(b); }, mime, 0.92);
+                    }).then(function (blob) {
+                      if (!blob) return;
+                      var nm = base + "-page-" + pageNum + "." + format;
+                      items.push({ blob: blob, name: nm, label: nm });
+                      var card = document.createElement("div"); card.className = "thumb-card";
+                      var img = document.createElement("img");
+                      img.src = URL.createObjectURL(blob);
+                      img.alt = "Page " + pageNum + " of " + base;
+                      card.appendChild(img);
+                      var bar = document.createElement("div"); bar.className = "tbar";
+                      var num = document.createElement("span"); num.className = "pnum"; num.textContent = "Page " + pageNum;
+                      bar.appendChild(num);
+                      card.appendChild(bar);
+                      $("p2iGrid").appendChild(card);
+                    });
+                  });
+                });
+              });
+            })(n);
+          }
+          return chain.then(function () { return items; });
+        }).then(function (items) {
+          renderResults($("p2iResult"), items);
+          $("p2iStatus").textContent = items.length
+            ? "Done — " + items.length + (items.length === 1 ? " page" : " pages") + " converted. Download each image below."
+            : "No pages could be converted.";
+        }).catch(function (err) {
+          toast(err && err.message ? err.message : "That PDF could not be converted — it may be password-protected or damaged.");
+        }).then(function () { setBusy(btn, false); });
+      });
+
+      /* ---------- 6. Compress PDF ---------- */
+      var cmpFile = null;
+      $("cmpPick").addEventListener("click", function () { $("cmpInput").click(); });
+      $("cmpInput").addEventListener("change", function () {
+        var f = this.files && this.files[0]; this.value = "";
+        if (!f) return;
+        cmpFile = f;
+        $("cmpResult").innerHTML = ""; $("cmpStatus").textContent = "";
+        $("cmpInfo").textContent = f.name + " · original size " + fmtBytes(f.size) + " — ready to compress.";
+      });
+      $("cmpGo").addEventListener("click", function () {
+        if (!window.PDFLib) { toast("PDF maker failed to load — check your connection and try again."); return; }
+        if (!cmpFile) { toast("Choose a PDF first."); return; }
+        var btn = this; setBusy(btn, true, "Compressing…");
+        $("cmpResult").innerHTML = "";
+        var presets = { high: { scale: 2, q: 0.85 }, med: { scale: 1.5, q: 0.7 }, low: { scale: 1.15, q: 0.55 } };
+        var preset = presets[$("cmpQuality").value] || presets.med;
+        var base = baseName(cmpFile.name);
+        cmpFile.arrayBuffer().then(function (buf) {
+          return openJsPdf(new Uint8Array(buf));
+        }).then(function (jsDoc) {
+          var out = PDFLib.PDFDocument.create();
+          var chain = Promise.resolve();
+          for (var n = 1; n <= jsDoc.numPages; n++) {
+            (function (pageNum) {
+              chain = chain.then(function () {
+                return jsDoc.getPage(pageNum).then(function (page) {
+                  var vp1 = page.getViewport({ scale: 1 });
+                  var vp = page.getViewport({ scale: preset.scale });
+                  var canvas = document.createElement("canvas");
+                  canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
+                  var ctx = canvas.getContext("2d");
+                  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                  return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+                    return canvasToBytes(canvas, "image/jpeg", preset.q);
+                  }).then(function (jpgBytes) {
+                    return out.embedJpg(jpgBytes).then(function (im) {
+                      var pg = out.addPage([vp1.width, vp1.height]);
+                      pg.drawImage(im, { x: 0, y: 0, width: vp1.width, height: vp1.height });
+                    });
+                  });
+                });
+              });
+            })(n);
+          }
+          return chain.then(function () { return out.save(); });
+        }).then(function (bytes) {
+          var nm = base + "-compressed.pdf";
+          renderResults($("cmpResult"), [{ blob: pdfBlob(bytes), name: nm, label: nm }]);
+          $("cmpStatus").textContent = "Done — original " + fmtBytes(cmpFile.size) + ", compressed " + fmtBytes(bytes.length) + "." +
+            (bytes.length >= cmpFile.size ? " This one didn't shrink — that happens with text-heavy PDFs; try the Smallest setting, or keep the original." : " Download it below and check the pages look right before you rely on it.");
+        }).catch(function (err) {
+          toast(err && err.message ? err.message : "That PDF could not be compressed — it may be password-protected or damaged.");
+        }).then(function () { setBusy(btn, false); });
+      });
 
       /* ---------------- Sample document ---------------- */
       $("sampleBtn").addEventListener("click", function () {

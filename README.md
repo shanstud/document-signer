@@ -1,6 +1,6 @@
 # Document Signer
 
-Sign PDFs and document photos right in your browser — free, open source, no account, no uploads.
+Sign PDFs and document photos right in your browser — and work on PDFs with six built-in tools. Free, open source, no account, no uploads.
 
 **Live app:** https://shanstud.github.io/document-signer/
 
@@ -14,6 +14,17 @@ Drop in a PDF or a photo of a document, place your signature on it, and download
 - **Add text, dates and ticks** anywhere on any page — drag and resize everything into place
 - **Works on phone and desktop**, light and dark mode
 - **Built-in sample agreement** so you can try it instantly
+
+## PDF tools included
+
+The same privacy-first model — everything happens on your device:
+
+- **Merge PDF** — combine several PDFs into one, in the order you choose
+- **Split PDF** — extract page ranges (like 1-3, 5) or save every page as its own PDF
+- **Organize PDF** — see every page as a thumbnail; reorder, rotate or delete pages, then save
+- **Images to PDF** — turn PNG/JPG images into a PDF, with fit, A4 or Letter page sizing
+- **PDF to Images** — save each page of a PDF as a PNG or JPG image
+- **Compress PDF** — rebuilds a PDF at a quality you choose; it shows the real before-and-after sizes and never promises a percentage saving
 
 ## Privacy
 
@@ -35,7 +46,7 @@ Feature requests and bug reports are welcome in [Issues](../../issues). Tell us 
 
 ## Roadmap
 
-- PDF tools in the same privacy-first style: merge, split, rotate, images to PDF, PDF to images, compress
+- More tools in the same style, driven by your requests — OCR and batch workflows are candidates
 - More signature and form-filling options, based on your feedback
 
 ## Licence
